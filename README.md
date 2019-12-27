@@ -1,1 +1,1 @@
-# example-of-loading-a-DLL-directly-into-a-process-
+Простой пример подгружать DLL сразу в процесс без подкачки , для чита ( после инжекта API.lua )
