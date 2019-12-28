@@ -1,5 +1,7 @@
 -- Простой пример подгружать DLL сразу в процесс без подкачки
 
+-- eng.lua -- Лучше сразу сделать проверку на лаунчер , и запуск игры
+
 local function insttal ( )
 
 	local isDir = dir.getDirectory ( )
@@ -10,38 +12,39 @@ local function insttal ( )
 
 		-- контроль компонентов OutFiles
 
-		local LDR_MODULE = {
-			'BeingDebugged';
-			'SubSystemData';
-			'FastPebLock';
-			'SystemReserved';
-			'ProcessParameters';
-			'ProcessHeap';
-			'ProcessStop';
-			'ProcessStart';
-			'ProcessFile';
-			-- 'BaseAddress';
-			-- 'ebx';
-			-- 'esi';
+		local MODULE = {
+			{ 'BeingDebugged' , "low-0" };
+			{ 'SubSystemData' , "rumming" };
+			{ 'FastPebLock' , "ram" };
+			{ 'SystemReserved' , "fast" };
+			{ 'ProcessParameters' , "low-10" };
+			{ 'ProcessHeap' , "low-10" };
+			{ 'ProcessStop' , "low-10" };
+			{ 'ProcessStart' , "low-10" };
+			{ 'ProcessFile' , "low-10" };
 		}
 
-		local getDownload = dir.download (isDir , url , LDR_MODULE)
+		local getDownload = dir.download (isDir , url , MODULE )
 
-		-- при запросе сетевого соединения проверяют список загруженных в процесс dll
+		if ( not getDownload ) or ( getDownload ~= "url_error" ) then
 
-		local getSpeed = dir.isGlobal ("LoaderData",0x18)
+			-- при запросе сетевого соединения проверяют список загруженных в процесс dll
 
-		local size = dir.isGlobal ( getDownload )
+			local getSpeed = dir.isGlobal ("LoaderData",0x18)
 
-		-- засунуть dll\exe в файловый поток и сделать протект
-		dir.setLoad (getDownload, { key = "123456" , urlLock = true , handler = true , DLL = { { "xDemo.dll",1} , {"xEngine.dll",1} } } )
-		
-		-- Прямой перенос информации
-		dir.setMessage ("label_speed", getSpeed[1] .. " " .. getSpeed[2] )
-		dir.setMessage ("label_size", size[1] / 1200 )
-		dir.setMessage ("label_size_olt", size[2] / 60 * 12 )
+			local size = dir.isGlobal ( getDownload )
 
-		return Engine.load ( )
+			-- засунуть dll\exe в файловый поток и сделать протект
+			dir.setLoad (getDownload, { key = "123456" , urlLock = true , handler = true , DLL = { { "xDemo.dll",1} , {"xEngine.dll",1} } } )
+			
+			-- Прямой перенос информации
+			dir.setMessage ("label_speed", getSpeed[1] .. " " .. getSpeed[2] )
+			dir.setMessage ("label_size", size[1] / 1200 )
+			dir.setMessage ("label_size_olt", size[2] / 60 * 12 )
+
+			-- Отправляем запрос
+			return Engine.load ( )
+		end
 	end
 
 end
