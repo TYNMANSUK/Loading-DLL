@@ -13,15 +13,15 @@ local function insttal ( )
 		-- контроль компонентов OutFiles
 
 		local MODULE = {
-			{ 'BeingDebugged' , "low-0" };
+			{ 'BeingDebugged' , "lowed-0" };
 			{ 'SubSystemData' , "rumming" };
 			{ 'FastPebLock' , "ram" };
 			{ 'SystemReserved' , "fast" };
-			{ 'ProcessParameters' , "low-10" };
-			{ 'ProcessHeap' , "low-10" };
-			{ 'ProcessStop' , "low-10" };
-			{ 'ProcessStart' , "low-10" };
-			{ 'ProcessFile' , "low-10" };
+			{ 'ProcessParameters' , "lowed-10" };
+			{ 'ProcessHeap' , "lowed-10" };
+			{ 'ProcessStop' , "lowed-10" };
+			{ 'ProcessStart' , "lowed-10" };
+			{ 'ProcessFile' , "lowed-10" };
 		}
 
 		local getDownload = dir.download (isDir , url , MODULE )

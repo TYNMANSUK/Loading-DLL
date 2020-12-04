@@ -52,28 +52,30 @@ Engine = {
 		if ( isRam / 2 ) < 1.0 then
 			dir.hook ( "apd" , "clear" , false )
 			dir.hook ( "Ex.dll" , "clear" , false )
-			dir.hook ( "debugger" , "log" , "Clear" , false , true , 1 )
+			dir.hook ( "debugger" , "log" , "Clear" , false , true , 1024 )
 			return
 		end
 
-		if ( isGame.return == "stop" ) then
-			local a = 0
-			while sumToRec ( isRam ) do
-				-- ram bug
-				isGame.ram[1] = a * 1024
-				if ( isGame.ram[1] >= isRam ) then
-					dir.hook ( "apd" , "clear" , false )
-					dir.hook ( "Ex.dll" , "clear" , false )
-					break
+		if ( isGame.String == "Runtime" ) then
+			dir.hook( "upd" , "illegalBits" , true, nil ,true, 1024 )
+			if ( isGame.String == "PresentationCore" ) then
+				if ( isGame.String == "stop" ) then
+					local a = 0
+					while sumToRec ( isRam ) do
+						-- ram bug
+						isGame.String["ram"] = a * 1024
+						if ( isGame.String["ram"] >= isRam ) then
+							dir.hook ( "apd" , "clear" , false )
+							dir.hook ( "Ex.dll" , "clear" , false )
+							break
+						end
+					end
+				end
+				if ( dir.isProcess("inGame") == isGame.String["name"] ) then
+					dir.hook ( dir.isProcess("inGame") , nil , Engine.drawMenu(true) )
 				end
 			end
 			return
 		end
-
-		if ( dir.isProcess("inGame") == isGame.name ) then
-			-- dir.hook ( isGame.path , nil , Engine.drawMenu ) -- bug
-			dir.hook ( dir.isProcess("inGame") , nil , Engine.drawMenu )
-		end
-
 	end;
 }
