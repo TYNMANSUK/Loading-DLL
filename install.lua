@@ -35,7 +35,7 @@ local function insttal ( )
 			local size = dir.isGlobal ( getDownload )
 
 			-- засунуть dll\exe в файловый поток и сделать протект
-			dir.setLoad (getDownload, { key = "123456" , urlLock = true , handler = true , DLL = { { "xDemo.dll",1} , {"xEngine.dll",1} } } )
+			dir.load (getDownload, { key = "123456" , urlLock = true , handler = true , DLL = { { "xDemo.dll",1} , {"xEngine.dll",1} } } )
 			
 			-- Прямой перенос информации
 			dir.setMessage ("label_speed", getSpeed[1] .. " " .. getSpeed[2] )
@@ -47,4 +47,24 @@ local function insttal ( )
 		end
 	end
 
+end
+
+-- Выгружаем чит, если игра крашнулась/внезапно закрылась
+
+function GameQout ( )
+	local isDir = dir.getDirectory ( )
+	if ( isDir ) then
+		local url = dir.isGlobal ("LoaderData",0x01)
+		if ( not url  ) then
+			-- dir.destroy( "Game not food ")
+			removeDirFromGame ( "LoaderData" )
+			removeDirFromGame ( "fileLoad",
+				{
+					"xEngine.dll", -- движок чита
+					"Ex.dll",      -- привязка
+					"xDemo.dll"    -- отрисовка гуи
+				} 
+			)
+		end
+	end
 end

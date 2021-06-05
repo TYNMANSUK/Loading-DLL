@@ -9,32 +9,35 @@ Engine = {
 	end;
 
 	drawMenu = function ( )
-		-- отрисовка в меню чита игры
-		local getTest = createTab ( "Тест" )
+		-- отрисовка меню
+		local getTest = createTab ( "Тест", { x = 20 , y = 400})
 		if ( dir.IsElement ( getTest ) ) then
 
 			addText ( getTest , "Testttt" , 1 , nil , nil , nil )
 			test = addButton ( getTest , "Ok" )
 			addText ( getTest , "Testttt2" , 1 , nil , nil , nil )
-			test2 = addButton ( getTest , "lox" )
+			test2 = addButton ( getTest , "Close" )
 
 			local getClick = dir.isButton("root" )
 
 			getClick.addEvent("target","click",
-				function(button)
+				function(button, state)
+					debug ( "state" .. state ,1)
 					if ( button == test ) then
-						iprint ("test?" .. button)
+						debug ("test?" .. button,2)
 					elseif ( button == test2 ) then
-						iprint ("test2?" .. button)
+						debug ("test2?" .. button,3)
 					end
 				end
 			)
 
 			-- test render
 			local w,h = dir.screenSize ( )
-			getClick.addEvent("target","render",
+			getClick.addEvent("onRender",
 				function(button)
-					rectangle (h-400,w/2-400/2,400,400,1,1,RGB(0,0,0,100))
+					rectangle ((w-200)/2,(h-200)/2,200,200,tocolor(0,0,0,100))
+					-- тестовая загрузка картинки из интернета ( иногда может быть белый пиксель )
+					image ((w-400)/2,(h-800)/2,400,400,"avatars.githubusercontent.com/u/28936977?v=4",tocolor(0,0,0,100))
 				end
 			)
 
@@ -47,12 +50,17 @@ Engine = {
 		local isGame = Engine.getDll( )
 		local isRam = isGame["IsRam"] / 1024
 
+		if isGame == "not" then
+			GameQout()
+			return
+		end
+
 		-- Решение проблем неправильного использования памяти
 
 		if ( isRam / 2 ) < 1.0 then
-			dir.hook ( "apd" , "clear" , false )
-			dir.hook ( "Ex.dll" , "clear" , false )
-			dir.hook ( "debugger" , "log" , "Clear" , false , true , 1024 )
+			dir.hook ( "apd" , "isClearGameLianer" , false )
+			dir.hook ( "Ex.dll" , "isClearGameLianer" , false )
+			dir.hook ( "debuger" , "log" , "isClearGameLianer" , true , true , nil )
 			return
 		end
 
@@ -65,8 +73,8 @@ Engine = {
 						-- ram bug
 						isGame.String["ram"] = a * 1024
 						if ( isGame.String["ram"] >= isRam ) then
-							dir.hook ( "apd" , "clear" , false )
-							dir.hook ( "Ex.dll" , "clear" , false )
+							dir.hook ( "apd" , "isClearGameLianer" , false )
+							dir.hook ( "Ex.dll" , "isClearGameLianer" , false )
 							break
 						end
 					end
